@@ -1,0 +1,34 @@
+\section{Data and Models}
+
+\subsection{Datasets}
+
+To implement our proposed learning method we have selected the following datasets. Our selection is comprised of datasets increasing progressively in relative difficulty, mirroring what humans learn as they advance from gradeschool to highschool. 
+
+% change this to a subsection for each?
+\subsubsection{GSM8K}
+    
+    The GSM8K dataset was introduced in \citet{cobbe2021trainingverifierssolvemath} and is comprised of 8.5K high quality linguistically diverse grade school math (GSM) word problems created by human problem writers. These problems focus on basic arithmetic operations with each problem generally requiring 2 to 8 steps of work to solve, and solutions primarily involve performing a sequence of elementary calculations using basic arithmetic operations (+ - × ÷) to reach the final answer. Each problem instance in the data comes with a sample step-by-step solution. This dataset is segmented into 7.5K training problems and 1K test problems.
+
+\subsubsection{MATH}
+    
+    The MATH dataset, introduced in \citet{hendrycks2021measuringmathematicalproblemsolving}, of 12.5K mathematics problems (7500 train/5000 test split) from high school math competitions in \LaTeX. Each problem in MATH dataset has a full step-by-step solution which can be used for teaching models to generate the derivations and explanations involved in CoT training. In addition, MATH problems are tagged by difficulty from 1 to 5, and span seven subjects including geometry, where diagrams can be specified in text with the Asymptote language. This enables a fine-grained assessment of mathematical problem-solving ability across difficulties and subjects. Finally, problems come with full step-by-step solutions. By training on these, models can learn to generate their own step-by-step solutions, which can facilitate learning and make model outputs more interpretable. 
+
+% \subsection{MMLU} \citet{hendryckstest2021}
+
+%? include some other benchmarking datasets? This will be added in the final report if we do it
+
+% \begin{figure}[t]
+%     \centering
+%     \includegraphics[width=0.5\textwidth]{figs/sentence.png}
+%     \caption{Please feel free to include figures! If you want your figure to span both columns, use \emph{figure*} instead of \emph{figure}.}
+%     \label{fig:example}
+% \end{figure}
+
+\subsection{Models}
+We will be experimenting by fine-tuning smaller-scale Large Language Models with less than 10 billion parameters. This is in order to improve our training cycle, as fine-tuning smaller models takes less time. We believe that fast iterations on small models would result in richer, more detailed experimentation. Using smaller-scale models would also reduce the computation cost necessary to fine-tune the models, as large models require high GPU usage, and this is a small scale, resource constrained project.
+
+\subsubsection{LLama 3.1 8B}
+Our first candidate of the Large Language Model to fine-tune is Llama 3.1 - 8B \cite{grattafiori2024llama}. This model is one of the most popular open-source text generation model by Meta. Since it is very popular amongst the research community and the industry, there are several tutorials online for fine-tuning the model, which would be a great place to start as our team does not have extensive experience in fine-tuning Large Language Models.
+
+\subsubsection{Mathstral 7B}
+Our second candidate of the Large Language Model to fine-tune is Mathstral 7B \cite{mistral2024mathstral}. This is a model specialized in mathematical and scientific tasks, based on the Mistral 7B by Mistral AI. This differs from Llama 3.1, which is a general-purpose language model, as Mathstral is fine-tuned specifically for mathematics. Therefore it would serve as a measure as to how effective our approach is to models that already have extensive mathematical training.
