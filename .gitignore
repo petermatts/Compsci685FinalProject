@@ -1,6 +1,7 @@
 # Reference Papers
 docs/references/*.pdf
-
+.venv
+*unsloth*
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
