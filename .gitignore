@@ -1,7 +1,27 @@
 # Reference Papers
 docs/references/*.pdf
+
+# Python stuff
 .venv
+__pycache__
+
+# Unsloth support files
 *unsloth*
+
+# Saved Models
+*.npy
+*.npz
+*.pt
+*.pth
+
+# Saved Images
+*.png
+*.jpeg
+
+####################################################################################################
+# GitHub Generated
+####################################################################################################
+
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
