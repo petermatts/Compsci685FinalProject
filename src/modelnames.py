@@ -1,3 +1,5 @@
+# references: https://docs.unsloth.ai/get-started/all-our-models
+
 class BIT4:
     """This class contains constants for accessing pretrained 4 bit models through unsloth"""
     LLAMA3_8B = "unsloth/llama-3-8b-bnb-4bit"
