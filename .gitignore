@@ -1,3 +1,7 @@
+# Project specific
+**/.env
+**/*.id
+
 # Reference Papers
 docs/references/*.pdf
 .venv
