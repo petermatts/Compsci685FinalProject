@@ -1,11 +1,36 @@
 # Project specific
 **/.env
 **/*.id
+__pycache__
+
 
 # Reference Papers
 docs/references/*.pdf
+
+# Python stuff
 .venv
+__pycache__
+
+# Unsloth support files
 *unsloth*
+
+# Saved Models
+*.npy
+*.npz
+*.pt
+*.pth
+!models/README.md
+models
+outputs
+
+# Saved Images
+*.png
+*.jpeg
+
+####################################################################################################
+# GitHub Generated
+####################################################################################################
+
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
