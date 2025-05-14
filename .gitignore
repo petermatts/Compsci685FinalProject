@@ -22,6 +22,8 @@ __pycache__
 !models/README.md
 models
 outputs
+gold
+results
 
 # Saved Images
 *.png

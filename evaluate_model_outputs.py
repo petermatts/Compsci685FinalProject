@@ -143,8 +143,6 @@ def process_answers(df: pd.DataFrame, gold_is_latex: bool) -> pd.DataFrame:
     results_df.attrs['correct_count'] = correct_count 
     print(accuracy_by_level['accuracy'].to_dict())
    
-
-    
     return results_df
 
 def main():
