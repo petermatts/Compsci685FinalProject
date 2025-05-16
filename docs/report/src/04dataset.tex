@@ -1,0 +1,43 @@
+% \section{Your dataset}
+% The most important rule of NLP: look at your data! Provide us with examples from your dataset, and describe your task in a coherent manner. Explain what properties of the data make your task challenging. Report the source of the dataset, its basic statistics (e.g., size, number of words/sentences/documents) and some other statistics that are specifically relevant to your task. Show a couple input/output pairs to make it clear what you're doing (but don't use up too much space in doing so!).
+
+\section{Datasets: GSM8K and MATH}
+
+\subsection{GSM8K}
+
+For our experiments, we will be using the Grade School Math dataset (GSM8K), which was introduced in \citet{cobbe2021trainingverifierssolvemath}. This dataset includes 8.5K high-quality and linguistically diverse math questions at the elementary/primary school level. Specifically, the problems in this dataset focus on basic arithmetic problems using math operations like $(+-\times\div)$ that should take approximately between 2 to 8 steps to solve. The dataset is split approximately into 7.5K training questions and 1K test questions. Each question comes annotated with a corresponding sample answer/solution.
+
+\subsection{MATH}
+
+We will also be using the MATH benchmarking dataset, introduced by \citet{hendrycks2021measuringmathematicalproblemsolving}, which contains 12.5K total math high/secondary school level math competition problems. The MATH dataset is partitioned as 7.5K training problems and 5K test problems. Each problem is given in \LaTeX-format with a CoT style, step-by-step, sample answer also in \LaTeX-format. Geometry problems are additionally given using the Asymptote language, which is a vector graphics language commonly used to depict geometrical figures. Finally, each of the problems in MATH is given a difficulty level assignment from 1 to 5, 1 being the easiest level and 5 being the hardest.
+
+\subsection{Data Preprocessing}
+% If you did any preprocessing, explain what you did (and why) here! 
+
+Our experiment design involves assigning some metric of difficulty to our data in order to perform some structured form of curriculum learning. Fortunately, the MATH dataset from \cite{hendrycks2021measuringmathematicalproblemsolving} is already annotated with difficulty ratings for its problems. However, the GSM8K dataset from \cite{cobbe2021trainingverifierssolvemath} provides no such ordering annotation.
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{ccc}
+    \toprule
+        Difficulty & \# Train Probs & \# Test Probs \\\midrule
+        1 & 17 & 2 \\
+        2 & 399 & 71 \\
+        3 & 1037 & 191 \\
+        4 & 3571 & 584 \\
+        5 & 2449 & 471 \\\bottomrule
+    \end{tabular}
+    \caption{GSM8K Batch Processing (Model) Problem Difficulty Distribution, assigned by OpenAI GPT-4o mini.}
+    \label{tab:gsm8k_batchprocessing}
+\end{table}
+
+To obtain a difficulty rating for the problems in GSM8K, we took the approach of using an existing LLM as a ``teacher'' model to assign a difficulty rating to each problem, thus developing a more structured curriculum for GSM8K fine-tuning. For this task we selected OpenAI's GPT-4o mini model. 
+We queried each of the problems in GSM8K to the model with the following prompt:
+
+``You are a math problem classifier bot. You will be given a math question-answer pair, and your task is to classify its difficulty with an integer between 1-5, where 1 is lower elementary school level and 5 is upper elementary school level. Level 1 should contain up to counting and basic addition/subtraction (up to 20). Level 2 should contain up to addition/subtraction (any number), basic multiplication/division (up to 20), and basic fractions and decimals. Level 3 should contain up to multiplication/division (any number), complex fractions and decimals, and basic geometry (area, perimeter). Level 4 should contain up to advanced geometry (complex shapes), basic algebra (variables), and percentages/ratios. Level 5 should contain up to standard algebra, negative numbers, data analysis (mean, median, mode), and exponentiation. ONLY output the difficulty level, NOTHING ELSE.''
+
+After this prompt, we supplied the model with the question and sample answer from the GSM8K dataset. In Table \ref{tab:gsm8k_batchprocessing}, we can see the resulting distribution of difficulties.
+
+
+% \subsection{Data annotation}
+% If your project involves annotation, you may have started a pilot annotation experiment, annotating a few dozen or few hundred examples. What major issues have come up? Do you and your project partners agree or disagree on examples? Report interannotator agreement if applicable.

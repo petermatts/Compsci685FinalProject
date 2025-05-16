@@ -1,0 +1,71 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[hyperref]{naaclhlt2019}
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage{graphicx}
+\usepackage[normalem]{ulem}
+\usepackage{pifont}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{url}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+\newcommand{\pmark}{\ding{58}}%
+
+\aclfinalcopy 
+
+\title{SCHOOL: Structuring Curriculum for Holistic Optimization of Learning in Large Language Models}
+
+\author{Matthew Peters \\
+  {\tt matthewpeter@umass.edu} \\\And
+  Aishwarya Sampath Kumar \\
+  {\tt asampathkuma@umass.edu} \\\AND
+  Takuto Ban \\
+  {\tt tban@umass.edu} \\
+  \And
+  Hung Pham \\
+  {\tt hdpham@umass.edu} \\
+}
+  
+% \setlength\textwidth{16.0cm}
+\date{}
+
+\begin{document}
+\maketitle
+
+\input{src/01problem_statement}
+\input{src/02proposed_accomplished}
+\input{src/03related_work}
+\input{src/04dataset}
+\begin{table*}[t]
+    \centering
+    \begin{tabular}{lcccccc}
+    \toprule
+    \multirow{2}{*}{Model} & \multicolumn{5}{c}{Difficulty} & MATH\\
+         & 1 & 2 & 3 & 4 & 5 & Test \\\midrule
+        Base (Llama 3.1 8B) & 9.3\% & 13.3\% & 9.5\% & 6.3\% & 2.2\% & 7.4\% \\
+        GSM8K (U)           & 31.0\% & 23.0\% & 11.7\% & 6.8\% & 5.5\% & 12.5\% \\
+        GSM8K (S)           & 30.2\% & 20.0\% & 11.0\% & 7.4\% & 3.4\% & 11.3\% \\
+        MATH (U)            & \textbf{45.0\%} & 28.1\% & 18.7\% & 12.0\% & 4.5\% & 17.1\% \\
+        MATH (S)            & 24.8\% & 22.6\% & 22.5\% & 10.7\% & 6.5\% & 15.4\% \\
+        GSM8K + MATH (U)    & 38.8\% & 28.9\% & 21.0\% & 11.5\% & \textbf{7.0\%} & 17.7\% \\
+        GSM8K + MATH (S)    & 31.8\% & 19.3\% & 17.1\% & \textbf{12.5\%} & 3.0\% & 13.8\% \\
+        Combined            & \textbf{45.0\%} & \textbf{32.2\%} & \textbf{26.3\%} & 11.5\% & 3.2\% & \textbf{19.0\%} \\
+        \bottomrule
+    \end{tabular}
+    \caption{Our model performance (average of 3 models) on the MATH test set, broken down by difficulty levels and overall. (U) denotes unsorted/no curriculum training, and (S) denotes sorted/curriculum training.}
+    \label{tab:math_inference}
+\end{table*}
+\input{src/05baseline}
+\input{src/06approach}
+\input{src/07analysis}
+\input{src/08contributions}
+\input{src/09conclusion}
+
+\bibliographystyle{apalike}
+\footnotesize
+\bibliography{bib}
+
+\end{document}

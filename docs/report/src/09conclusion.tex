@@ -1,0 +1,27 @@
+\section{Conclusion}
+Our work shows that fine-tuning a model, aggregating both ``easy'' and ``hard'' problems out outperforms training a model on an easier dataset or a harder dataset separately. Ultimately, fine-grained curriculum structuring did not perform as well as we anticipated, but overall, structured curriculum (both datasets unsorted) did perform strongly. Our combined dataset fine-tuned model is performing the best overall.
+
+In our analysis of problems, we saw that our models were very successful at getting the simple arithmetic correct; however, for larger problems that required more complex reasoning, our models struggled greatly and were prone to many issues, including hallucinations. We believe this is because the models are trying to learn math concepts from a linguistic/text language perspective instead of looking into the math itself. % Perhaps, in the future, we should create a new method called MTP (Math Thinking Process) or something instead of NLP (Natural Language Processing)
+
+Our experiments were conducted on smaller LLMs, testing our methods on larger models should yield stronger performance and could highlight some more insights into LLM learning methods. Additionally, our models get hung up on syntactical and semantic issues as well as the occasional basic arithmetic error. Looking into better methods, building on our work here would be a worthwhile venture. 
+
+\section{AI Disclosure}
+\begin{itemize}
+    \item Did you use any AI assistance to complete this report? If so, please also specify what AI you used.
+    \begin{itemize}
+        \item No
+    \end{itemize}
+\end{itemize}
+
+\noindent\textit{If you answered yes to the above question, please complete the following as well:}
+
+\begin{itemize}
+    \item  If you used a large language model to assist you, please paste *all* of the prompts that you used below. Add a separate bullet for each prompt, and specify which part of the proposal is associated with which prompt.
+    \begin{itemize}
+        \item your response here
+    \end{itemize}
+    \item \textbf{Free response:} For each section or paragraph for which you used assistance, describe your overall experience with the AI. How helpful was it? Did it just directly give you a good output, or did you have to edit it? Was its output ever obviously wrong or irrelevant? Did you use it to generate new text, check your own ideas, or rewrite text?
+    \begin{itemize}
+        \item your response here
+    \end{itemize}
+\end{itemize}

@@ -1,0 +1,90 @@
+\section{Experiment}
+
+\subsection{Design}
+
+\citet{soviany2022curriculumlearningsurvey} found that for NLP tasks, curriculum learning is often based on relatively simple heuristics such as text length. For more effective curriculum learning, we propose that the curriculum should be designed to resemble that of a human learner’s experience more closely. We will finetune Meta-Llama 3.1 8B using a curriculum training strategy by first learning grade school math from GSM8K, progressively training on problems of increasing difficulty (levels 1 to 5), which we will use another LLM such as OpenAI's GPT-4o mini model to evaluate difficulty levels of the GSM8K dataset using batch processing. We will then build upon this by fine-tuning over more advanced mathematics at the high school level from the MATH dataset, also progressively training on problems of increasing difficulty (levels 1 to 5).
+
+The hyperparameters we used for the Meta-Llama 3.1 8B model include $max\_seq\_length = 8192$ for long context length to accommodate full multi-step math reasoning. $r$ (LoRa rank) = 16, which controls the rank of the low-rank adaptation in LoRA. We chose a moderate value for a balance between performance and memory use. $lora\_alpha = 16$ which is a scaling factor for LoRA updates; commonly set equal to $r$. $lora\_dropout = 0$ for no dropout for optimal performance and reproducibility. $bias = "none"$ as to no bias term in LoRA layers for efficiency.  $load\_in\_4bit = True$ to use 4-bit quantization to reduce memory footprint, enabling training on larger sequence lengths and batch sizes. $learning\_rate = 2e-4$, which is a relatively high learning rate for LoRA-based fine-tuning, which adapts only a small subset of parameters. $num\_train\_epochs = 4$, which is a moderate number of epochs to allow multiple curriculum passes without overfitting. $gradient\_accumulation\_steps = 4$	allows simulation of larger batch sizes without needing excessive VRAM. $per\_device\_train\_batch\_size = 2$ matches limited GPU memory when using 8192 context length and 4-bit quantization. $warmup\_steps = 5$ ensures a stable start to training by gradually increasing the learning rate. $weight\_decay = 0.01$ helps prevent overfitting by regularizing weights. $optim	= ``adamw\_8bit''$, which is an optimizer suited for low-precision training.
+
+% \begin{table}[h!]
+%     \centering
+%     \begin{tabular}{cc}
+%     \\\toprule
+%         Hyperparameter & Value \\\midrule
+%         \texttt{max\_sequence\_length} & 8192 \\
+%          $r$ (LoRA Rank) & 16 \\
+%          $\alpha$ (LoRA) & 16 \\
+%          & \\
+%          & \\
+%          & \\\bottomrule
+%     \end{tabular}
+%     \caption{Caption}
+%     \label{tab:my_label}
+% \end{table}
+
+% In tuning these hyperparameters we settled on a combination of best practices for LoRA finetuning on long-context models (e.g., use of 4-bit quantization, gradient checkpointing), practical constraints (e.g., VRAM efficiency, long sequence handling) and progressive curriculum learning setup, where conservative tuning ensures smooth transitions across increasing difficulty levels.
+
+\subsection{Training}
+For our proposed experiment design, we will fine-tune Llama 3.1 8B over the GSM8K dataset and then the MATH dataset as a holistic curriculum that effectively encompasses math from grades 1 through 12 for humans. Additionally, we will also perform fine-tuning by structuring a curriculum within each dataset, by sorting over the difficulty of the problems. We will also perform an ablation by training solely over either GSM8K or MATH in a sorted and unsorted fashion.\footnote{All experiments were repeated 3x, all plots and numbers reported are the average performance of all 3 runs.}
+
+\subsubsection{Unsorted Datasets}
+
+We first started by fine-tuning a base Llama 3.1 8B model on the GSM8K train dataset. We then fine-tuned this model over the MATH dataset using the same procedure. Analogously, we fine-tuned a base model over MATH, but without the prior fine-tuning on GSM8K. In Figure \ref{fig:gsm8k_math_unsorted}, we compare the training loss plots for these models during their fine-tuning over the MATH training set. Observe that the loss of the model that was previously fine-tuned on GSM8K before MATH is slightly lower/better than that of the model fine-tuned on MATH only.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/gsm8k_math_unsorted.png}
+    \caption{Average Finetuning Losses of MATH only trained model vs MATH trained model that was previously trained on GSM8K.}
+    \label{fig:gsm8k_math_unsorted}
+\end{figure}
+
+Additionally, we experimented with training our model by combining both the GSM8K and MATH datasets into one dataset that we shuffled with a random ordering. In Figure \ref{fig:combined}, we see the resulting loss plot from fine-tuning over our combined dataset. We can see that our models were able to achieve a similar loss to those in Figure \ref{fig:gsm8k_math_unsorted}.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/combined.png}
+    \caption{Average Combined Dataset Model Losses}
+    \label{fig:combined}
+\end{figure}
+
+\subsubsection{Sorted Datasets}
+
+Similarly, we started by fine-tuning a base Llama 3.1 8B model on the GSM8K train dataset. This time, sorting the dataset (per our batch processing description) and training each difficulty level over 4 epochs before proceeding to the next difficulty. Since there are 5 difficulty levels, this means we fine-tune for a total of 20 epochs. The model is then fine-tuned over the MATH dataset, in the same fashion, using the default dataset difficulty labels as our sorting metric. Analogously to before, we also fine-tune a model exclusively over the MATH dataset.
+
+In Figure \ref{fig:leveled}, we can see the loss comparisons between the MATH sorted only model and the GSM8K sorted + MATH sorted fine-tuned models. We can see that for lower levels of difficulty that the loss for the model fine-tuned on both the sorted GSM8K and MATH datasets is significantly lower than that of the MATH sorted only model. However, for higher difficulties, the difference in the loss becomes more and more marginal, but the model trained on both sorted datasets maintains a lower loss.
+
+\begin{figure*}[t]
+    \centering
+    \begin{subfigure}[]{0.3\textwidth}
+        \includegraphics[width=\linewidth]{figs/gsm8k_math_level1.png}
+        \caption{Level 1 Difficulty}
+        \label{fig:lvl1}
+    \end{subfigure}
+    \begin{subfigure}[]{0.3\textwidth}
+        \includegraphics[width=\linewidth]{figs/gsm8k_math_level2.png}
+        \caption{Level 2 Difficulty}
+        \label{fig:lvl2}
+    \end{subfigure}
+    \begin{subfigure}[]{0.3\textwidth}
+        \includegraphics[width=\linewidth]{figs/gsm8k_math_level3.png}
+        \caption{Level 3 Difficulty}
+        \label{fig:lvl3}
+    \end{subfigure}
+    \begin{subfigure}[]{0.3\textwidth}
+        \includegraphics[width=\linewidth]{figs/gsm8k_math_level4.png}
+        \caption{Level 4 Difficulty}
+        \label{fig:lvl4}
+    \end{subfigure}
+    \begin{subfigure}[]{0.3\textwidth}
+        \includegraphics[width=\linewidth]{figs/gsm8k_math_level5.png}
+        \caption{Level 5 Difficulty}
+        \label{fig:lvl5}
+    \end{subfigure}
+    \caption{Avg fine-tuning losses broken down by difficulty for MATH only vs GSM8K+MATH}
+    \label{fig:leveled}
+\end{figure*}
+
+\subsection{Inference and Evaluation}
+Since the MATH dataset has its questions and answers in \LaTeX, we must be able to extract the \LaTeX answers and compare them to the output of our model. To accomplish this, we used the \texttt{math-verify} library \footnote{https://github.com/huggingface/Math-Verify} to aid in parsing the model outputs to determine if they indeed matched the correct answer to a problem. It is worth noting that, as we show in our analysis section, sometimes the model may output the correct \LaTeX, but the \texttt{math-verify} library may not match it properly to the correct answer. These errors are infrequent, but nonzero.
+
+In Table \ref{tab:math_inference}, we see the resulting performance of all our model designs on the MATH test set, additionally broken down by difficulty. We can see that our methods do indeed greatly improve performance over that of the base Llama 3.1 8B model. However, interestingly, our curriculum structuring did not have as strong of an effect as we initially anticipated. Our combined dataset performed the best overall and in the lower difficulty levels.

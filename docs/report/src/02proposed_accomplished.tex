@@ -1,0 +1,15 @@
+\section{What you proposed vs. what you accomplished}
+
+\begin{itemize}
+\item \cmark\; Gather datasets and select pre-trained open-source LLM to perform fine-tuning on: we chose GSM8K and MATH datasets, and the Llama 3.1 8B model from Meta and adapted by Unsloth for faster fine-tuning and inference.
+
+\item Training Frameworks
+\begin{itemize}
+    \item \cmark\; Direct fine-tuning on the math problem dataset: we fine-tuned the model using the default order (random order) of the dataset
+    \item \cmark\; Sequential fine-tuning, where the training is done by difficulty level in increasing order: we fine-tuned the model in difficulty order, with configurations including: GSM8K only, MATH only, and GSM8K + MATH. This includes unsorted and curriculum-difficult sorted for each configuration.
+    \item \xmark\; Pre-trained teacher model to guide learning at each stage: we were not able to accomplish this, as the need for a different, preferably better-performing model that could decompose the question into simpler subproblems. This exceeded our computational constraints, therefore we have decided not to experiment with this idea.
+\end{itemize}
+\item \cmark\; Perform in-depth evaluation analysis, to dive into what our model does well/struggles with, and possible reasons for its performance and behaviors.
+\end{itemize}
+
+Our code is stored on Github\footnote{https://github.com/petermatts/Compsci685FinalProject} and our models and inference results are saved to our Google Drive.\footnote{https://drive.google.com/drive/folders/17tkgFYV-GGInoEDtRkAnSmO7aLKOccB6?usp=sharing} The notebooks in our Github were used to run our experiments in a Google Colab environment using Nvidia A100 GPUs.
